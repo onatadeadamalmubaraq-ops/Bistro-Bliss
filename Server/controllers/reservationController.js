@@ -1,4 +1,4 @@
-import Reservation from "../models/reservation.js";
+import Reservation from "../models/Reservation.js";
 import nodemailer from "nodemailer";
 
 export const createReservation = async (req, res) => {
