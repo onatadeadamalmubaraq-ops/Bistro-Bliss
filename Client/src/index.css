@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+:root {
+  --onyx: #111111;
+  --ivory: #FCFBF7;
+  --gold: #D4AF37;
+  --crimson: #8B0000;
+}
+
+body {
+  background: var(--ivory);
+  color: var(--onyx);
+  font-family: Inter, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.gold-text {
+  color: var(--gold);
+}
+
+.gold-bg {
+  background-color: var(--gold);
+}
+
+.dark-bg {
+  background-color: var(--onyx);
+}
