@@ -4,13 +4,13 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import MainLayout from "../layout/MainLayout";
 import AdminLayout from "../layout/AdminLayout";
 
-import ReserveTable from "../components/ReserveTable";
+
 
 import Home from "../pages/Home";
 import Menu from "../pages/Menu";
 import Cart from "../pages/Cart";
 import Checkout from "../pages/Checkout";
-// import Reservation from "../pages/Admin/Reservation;"
+import Reservation from "../pages/Admin/Reservation;"
 import About from "../pages/About";
 
 import Success from "../pages/Success";
@@ -40,7 +40,7 @@ export default function AppRoutes() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/about" element={<About />} />
-          <Route path="/reserve" element={<ReserveTable />} />
+         
           <Route path="/success" element={<Success />} />
           <Route path="/failed" element={<Failed />} />
         </Route>
@@ -49,7 +49,7 @@ export default function AppRoutes() {
         <Route path="/admin" element={<AdminLayout />}>
   <Route path="dashboard" element={<Dashboard />} />
   <Route path="products" element={<Products />} />
-  {/* <Route path= "reservation" element={<Reservation />} />  */}
+  <Route path= "reservation" element={<Reservation />} /> 
   <Route path="analytics" element={<Analytics />} />
   <Route path="orders" element={<Orders />} />
   <Route path="kitchen" element={<KitchenDashboard />} />
