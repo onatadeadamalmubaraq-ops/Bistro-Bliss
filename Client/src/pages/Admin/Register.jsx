@@ -31,8 +31,8 @@ export default function Register() {
     const checkSetup = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:5000/api/auth/setup-status"
-        );
+  `${import.meta.env.VITE_API_URL}/api/auth/setup-status`
+);
 
         setSetupComplete(
           res.data.setupComplete
@@ -60,9 +60,9 @@ export default function Register() {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/auth/register",
-        formData
-      );
+  `${import.meta.env.VITE_API_URL}/api/auth/register`,
+  formData
+);
 
       localStorage.setItem(
         "token",

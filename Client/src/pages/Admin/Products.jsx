@@ -94,7 +94,7 @@ export default function Products() {
       image: null,
     });
 
-    setPreview(`http://localhost:5000${product.image}`);
+    setPreview(`${import.meta.env.VITE_API_URL}${product.image}`);
   };
 
   const handleDelete = async (id) => {
@@ -234,7 +234,7 @@ export default function Products() {
               className="border rounded-2xl overflow-hidden"
             >
               <img
-                src={`http://localhost:5000${product.image}`}
+                src={`${import.meta.env.VITE_API_URL}${product.image}`}
                 alt={product.name}
                 className="w-full h-48 object-cover"
               />
