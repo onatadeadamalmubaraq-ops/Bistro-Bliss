@@ -13,7 +13,7 @@ export default function Menu() {
   useEffect(() => {
     const fetchProducts = async () => {
       const res = await api.get("/products");
-      setProducts(res.data);
+      setProducts(Array.isArray(res.data) ? res.data : res.data.products || []);
     };
 
     fetchProducts();
