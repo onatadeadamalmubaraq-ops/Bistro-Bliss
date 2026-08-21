@@ -73,9 +73,12 @@ io.on("connection", (socket) => {
 /* MONGODB */
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB Connected"))
-  .catch((err) => console.log(err));
-
+  .then(() => {
+    console.log(" MongoDB Connected");
+  })
+  .catch((err) => {
+    console.error(" MongoDB Connection Error:", err.message);
+  });
 /* START SERVER */
 const PORT = process.env.PORT || 5000;
 
