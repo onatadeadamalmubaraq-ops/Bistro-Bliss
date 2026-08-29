@@ -56,8 +56,8 @@ export default function Navbar() {
 
   const navLinks = [
     { name: "Home", path: "/" },
-    { name: "Menu", path: "/menu" },
-    { name: "About", path: "/about" },
+    { name: "Our Menu", path: "/menu" },
+    { name: "About Us", path: "/about" },
   ];
 
   return (
@@ -154,7 +154,7 @@ export default function Navbar() {
               onClick={() => setOpen(false)}
               className={({ isActive }) =>
                 isActive
-                  ? "text-[#D4AF37] font-semibold"
+                  ? "text-[#D4AF37] font-bold"
                   : "hover:text-[#D4AF37]"
               }
             >
