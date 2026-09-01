@@ -1,6 +1,4 @@
 import dotenv from "dotenv";
-
-
 dotenv.config();
 
 import path from "path";
@@ -10,8 +8,11 @@ import express from "express";
 import http from "http";
 import mongoose from "mongoose";
 import cors from "cors";
-
 import { Server } from "socket.io";
+
+/* CREATE __dirname FOR ES MODULES */
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /* ROUTES */
 import orderRoutes from "./routes/orderRoutes.js";
