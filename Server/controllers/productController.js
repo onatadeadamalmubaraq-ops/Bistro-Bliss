@@ -47,9 +47,7 @@ export const createProduct = async (
       price: req.body.price,
       category: req.body.category,
       subCategory: req.body.subCategory,
-      image: req.file
-        ? `/uploads/${req.file.filename}`
-        : "",
+      image: req.file ? req.file.path : "",
     });
 
     res.status(201).json(product);
@@ -73,8 +71,8 @@ export const updateProduct = async (
     };
 
     if (req.file) {
-      updateData.image = `/uploads/${req.file.filename}`;
-    }
+        updateData.image = req.file.path;
+       }
 
     const product =
       await Product.findByIdAndUpdate(

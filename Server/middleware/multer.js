@@ -1,38 +1,21 @@
 import multer from "multer";
-import path from "path";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+import { v2 as cloudinary } from "cloudinary";
 
-const storage = multer.diskStorage({
-  destination(req, file, cb) {
-    cb(null, "uploads/products");
-  },
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
-  filename(req, file, cb) {
-    cb(
-      null,
-      `${Date.now()}-${file.originalname}`
-    );
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "bistro-bliss/products",
+    allowed_formats: ["jpg", "jpeg", "png", "webp"],
   },
 });
 
-const fileFilter = (req, file, cb) => {
-  const allowed = [
-    "image/jpeg",
-    "image/png",
-    "image/webp",
-  ];
+const upload = multer({ storage });
 
-  if (allowed.includes(file.mimetype)) {
-    cb(null, true);
-  } else {
-    cb(
-      new Error(
-        "Only jpg png and webp allowed"
-      )
-    );
-  }
-};
-
-export default multer({
-  storage,
-  fileFilter,
-});
+export default upload;
