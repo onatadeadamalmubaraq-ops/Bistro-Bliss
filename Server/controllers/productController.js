@@ -71,9 +71,8 @@ export const updateProduct = async (
     };
 
     if (req.file) {
-        updateData.image = req.file.path;
-       }
-
+          updateData.image = req.file.path;
+        }
     const product =
       await Product.findByIdAndUpdate(
         req.params.id,
