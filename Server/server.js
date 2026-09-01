@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+import path from "path";
+import { fileURLToPath } from "url";
 
 import express from "express";
 import http from "http";
@@ -17,6 +19,8 @@ import authRoutes from "./routes/authRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import reservationRoutes from "./routes/reservationRoutes.js";
+
+
 
 const app = express();
 const server = http.createServer(app);
@@ -39,7 +43,7 @@ app.use(
 );
 app.use(express.json());
 
-app.use("/uploads", express.static("uploads"));
+app.use( "/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/products", productRoutes);
 
 /* 🔥 ATTACH SOCKET TO REQUEST */
