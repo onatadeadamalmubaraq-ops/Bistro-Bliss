@@ -39,7 +39,7 @@ export default function Analytics() {
       {/* HEADER */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold">
-          📊 Analytics Dashboard
+           Analytics Dashboard
         </h1>
         <p className="text-gray-500">
           Overview of sales performance and order activity
@@ -75,7 +75,7 @@ export default function Analytics() {
       {/* INSIGHT SECTION */}
       <div className="bg-white p-6 rounded-xl shadow">
         <h2 className="text-xl font-bold mb-4">
-          📈 Performance Insight
+           Performance Insight
         </h2>
 
         <ul className="space-y-3 text-gray-700">

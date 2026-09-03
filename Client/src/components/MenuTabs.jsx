@@ -18,8 +18,8 @@ const mainCategories = [
 /* ---------------- SUB CATEGORY ---------------- */
 const subCategories = [
   { name: "All", icon: FaUtensils },
-  { name: "Fries", icon: FaBreadSlice },
-  { name: "Proteins", icon: FaDrumstickBite },
+  { name: "Salads & Fries  ", icon: FaBreadSlice },
+  { name: "Proteins & Grills", icon: FaDrumstickBite },
   { name: "Rice & Pasta", icon: FaUtensils },
   { name: "Pizza & Wraps", icon: FaPizzaSlice },
   { name: "Beverages", icon: FaGlassCheers },
