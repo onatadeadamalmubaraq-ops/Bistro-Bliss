@@ -86,57 +86,59 @@ export default function FlutterwavePaymentButton({
 
     handleFlutterPayment({
       callback: async (response) => {
-        closePaymentModal();
+  closePaymentModal();
 
-        try {
-          const orderPayload = {
-            customer,
+  // Stop if payment was not successful
+  if (
+    response.status !== "successful" &&
+    response.status !== "completed"
+  ) {
+    alert("Payment was not completed.");
+    navigate("/failed");
+    return;
+  }
 
-            items: cartItems.map(
-              (item) => ({
-                product: item._id,
-                name: item.name,
-                price: item.price,
-                quantity: item.qty,
-              })
-            ),
+  try {
+    const orderPayload = {
+      customer,
 
-            subtotal,
-            deliveryFee,
-            total,
+      items: cartItems.map((item) => ({
+        product: item._id,
+        name: item.name,
+        price: item.price,
+        quantity: item.qty,
+      })),
 
-            zone: {
-              branch,
-              region,
-              area,
-            },
+      subtotal,
+      deliveryFee,
+      total,
 
-            paymentStatus: "Paid",
-
-            tx_ref: response.tx_ref,
-
-            transactionId:
-              response.transaction_id,
-          };
-
-          const result =
-            await createOrder(
-              orderPayload
-            );
-
-          dispatch(clearCart());
-
-          navigate("/success", {
-            state: {
-              order: result,
-            },
-          });
-        } catch (error) {
-          console.error(error);
-
-          navigate("/failed");
-        }
+      zone: {
+        branch,
+        region,
+        area,
       },
+
+      paymentStatus: "Paid",
+
+      tx_ref: response.tx_ref,
+      transactionId: response.transaction_id,
+    };
+
+    const result = await createOrder(orderPayload);
+
+    dispatch(clearCart());
+
+    navigate("/success", {
+      state: {
+        order: result,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    navigate("/failed");
+  }
+},
 
       onClose: () => {
         console.log(

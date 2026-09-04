@@ -37,7 +37,7 @@ export default function AppRoutes() {
           <Route path="/menu" element={<Menu />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
-          <Route path="/reserve" element={<Reservation />} />
+          <Route path="/reservavation" element={<Reservation />} />
           <Route path="/about" element={<About />} />
           <Route path="/success" element={<Success />} />
           <Route path="/failed" element={<Failed />} />
