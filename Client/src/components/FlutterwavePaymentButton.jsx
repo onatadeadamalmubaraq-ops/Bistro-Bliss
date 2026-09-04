@@ -78,7 +78,6 @@ export default function FlutterwavePaymentButton({
     if (
       !customer?.name ||
       !customer?.phone ||
-      !customer?.email ||
       !customer?.address
     ) {
       alert(
