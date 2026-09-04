@@ -82,7 +82,7 @@ export default function Hero() {
           </Link>
 
           <Link
-            to="/reservation"
+            to="/reserve"
             className="px-8 py-4 border border-[#D4AF37] text-white rounded-lg hover:bg-[#D4AF37] hover:text-black transition"
           >
             Reserve Table
