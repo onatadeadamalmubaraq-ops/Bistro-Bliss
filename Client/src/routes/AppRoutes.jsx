@@ -8,7 +8,7 @@ import Home from "../pages/Home";
 import Menu from "../pages/Menu";
 import Cart from "../pages/Cart";
 import Checkout from "../pages/Checkout";
-import Reservation from "../pages/Admin/Reservation";
+import Reservation from "../pages/Reservation";
 import About from "../pages/About";
 
 import Success from "../pages/Success";
@@ -17,6 +17,7 @@ import Failed from "../pages/Failed";
 import Dashboard from "../pages/Admin/Dashboard";
 import Orders from "../pages/Admin/Orders";
 import Analytics from "../pages/Admin/Analytics";
+import AdminReservation from "../pages/Admin/Reservation";
 import KitchenDashboard from "../pages/Admin/KitchenDashboard";
 import RiderDashboard from "../pages/Admin/RiderDashboard";
 
@@ -46,7 +47,7 @@ export default function AppRoutes() {
         <Route path="/admin" element={<AdminLayout />}>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="products" element={<Products />} />
-          <Route path="reservation" element={<Reservation />} />
+          <Route path="reservation" element={<AdminReservation />} />
           <Route path="analytics" element={<Analytics />} />
           <Route path="orders" element={<Orders />} />
           <Route path="kitchen" element={<KitchenDashboard />} />
