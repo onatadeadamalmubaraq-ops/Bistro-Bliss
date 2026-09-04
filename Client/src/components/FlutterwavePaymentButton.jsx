@@ -76,69 +76,94 @@ export default function FlutterwavePaymentButton({
     }
 
     if (
-  !customer?.name?.trim() ||
-  !customer?.phone?.trim() ||
-  !customer?.address?.trim()
-) {
-  alert("Please complete delivery information.");
-  return;
-}
+      !customer?.name?.trim() ||
+      !customer?.phone?.trim() ||
+      !customer?.address?.trim()
+    ) {
+      alert("Please complete delivery information.");
+      return;
+    }
 
     handleFlutterPayment({
       callback: async (response) => {
-  closePaymentModal();
+        closePaymentModal();
 
-  // Stop if payment was not successful
-  if (
-    response.status !== "successful" &&
-    response.status !== "completed"
-  ) {
-    alert("Payment was not completed.");
-    navigate("/failed");
-    return;
-  }
+        try {
+          // Verify payment on backend first
+          const verifyResponse = await fetch(
+            `${import.meta.env.VITE_API_URL}/api/orders/verify-payment`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                transactionId: response.transaction_id,
+                tx_ref: response.tx_ref,
+              }),
+            }
+          );
 
-  try {
-    const orderPayload = {
-      customer,
+          const verifyResult =
+            await verifyResponse.json();
 
-      items: cartItems.map((item) => ({
-        product: item._id,
-        name: item.name,
-        price: item.price,
-        quantity: item.qty,
-      })),
+          if (
+            !verifyResponse.ok ||
+            !verifyResult.success
+          ) {
+            alert(
+              "Payment was not successful."
+            );
+            navigate("/failed");
+            return;
+          }
 
-      subtotal,
-      deliveryFee,
-      total,
+          const orderPayload = {
+            customer,
 
-      zone: {
-        branch,
-        region,
-        area,
+            items: cartItems.map(
+              (item) => ({
+                product: item._id,
+                name: item.name,
+                price: item.price,
+                quantity: item.qty,
+              })
+            ),
+
+            subtotal,
+            deliveryFee,
+            total,
+
+            zone: {
+              branch,
+              region,
+              area,
+            },
+
+            paymentStatus: "Paid",
+
+            tx_ref: response.tx_ref,
+            transactionId:
+              response.transaction_id,
+          };
+
+          const result =
+            await createOrder(
+              orderPayload
+            );
+
+          dispatch(clearCart());
+
+          navigate("/success", {
+            state: {
+              order: result,
+            },
+          });
+        } catch (error) {
+          console.error(error);
+          navigate("/failed");
+        }
       },
-
-      paymentStatus: "Paid",
-
-      tx_ref: response.tx_ref,
-      transactionId: response.transaction_id,
-    };
-
-    const result = await createOrder(orderPayload);
-
-    dispatch(clearCart());
-
-    navigate("/success", {
-      state: {
-        order: result,
-      },
-    });
-  } catch (error) {
-    console.error(error);
-    navigate("/failed");
-  }
-},
 
       onClose: () => {
         console.log(

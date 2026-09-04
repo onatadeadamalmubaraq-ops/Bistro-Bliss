@@ -1,46 +1,48 @@
 import axios from "axios";
 import Order from "../models/Order.js";
-
 export const verifyPayment = async (req, res) => {
   try {
-    const { transactionId } = req.params;
+    const { transactionId, tx_ref } = req.body;
+
+    if (!transactionId || !tx_ref) {
+      return res.status(400).json({
+        success: false,
+        message: "Transaction ID and tx_ref are required.",
+      });
+    }
 
     const response = await axios.get(
       `https://api.flutterwave.com/v3/transactions/${transactionId}/verify`,
       {
         headers: {
-          Authorization: `Bearer ${process.env.FLW_SECRET_KEY}`,
+          Authorization: `Bearer ${process.env.FLUTTERWAVE_SECRET_KEY}`,
         },
       }
     );
 
-    const data = response.data;
+    const payment = response.data;
 
     if (
-      data.status !== "success" ||
-      data.data.status !== "successful"
+      payment.status === "success" &&
+      payment.data.status === "successful" &&
+      payment.data.tx_ref === tx_ref
     ) {
-      return res.status(400).json({
-        message: "Payment not successful",
+      return res.status(200).json({
+        success: true,
+        message: "Payment verified successfully.",
       });
     }
 
-    const order = await Order.findOneAndUpdate(
-      { tx_ref: data.data.tx_ref },
-      {
-        paymentStatus: "Paid",
-        transactionId,
-      },
-      { new: true }
-    );
-
-    return res.json({
-      message: "Payment verified",
-      order,
+    return res.status(400).json({
+      success: false,
+      message: "Payment verification failed.",
     });
   } catch (err) {
+    console.error(err);
+
     return res.status(500).json({
-      message: "Verification failed",
+      success: false,
+      message: "Verification failed.",
       error: err.message,
     });
   }
