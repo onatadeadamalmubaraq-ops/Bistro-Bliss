@@ -76,15 +76,13 @@ export default function FlutterwavePaymentButton({
     }
 
     if (
-      !customer?.name ||
-      !customer?.phone ||
-      !customer?.address
-    ) {
-      alert(
-        "Please complete delivery information."
-      );
-      return;
-    }
+  !customer?.name?.trim() ||
+  !customer?.phone?.trim() ||
+  !customer?.address?.trim()
+) {
+  alert("Please complete delivery information.");
+  return;
+}
 
     handleFlutterPayment({
       callback: async (response) => {
