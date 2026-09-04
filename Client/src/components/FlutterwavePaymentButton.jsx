@@ -13,7 +13,9 @@ import { clearCart } from "../redux/cartSlice";
 export default function FlutterwavePaymentButton({
   customer,
   deliveryFee = 0,
-  zone,
+  branch,
+  region,
+  area,
 }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -34,7 +36,7 @@ export default function FlutterwavePaymentButton({
 
   const config = {
     public_key:
-      import.meta.env.VITE_FLW_PUBLIC_KEY,
+      import.meta.env.VITE_FLUTTERWAVE_PUBLIC_KEY,
 
     tx_ref: `BB-${Date.now()}`,
 
@@ -69,15 +71,14 @@ export default function FlutterwavePaymentButton({
 
   const handlePayment = () => {
     if (cartItems.length === 0) {
-      alert(
-        "Your cart is empty."
-      );
+      alert("Your cart is empty.");
       return;
     }
 
     if (
       !customer?.name ||
       !customer?.phone ||
+      !customer?.email ||
       !customer?.address
     ) {
       alert(
@@ -99,20 +100,23 @@ export default function FlutterwavePaymentButton({
                 product: item._id,
                 name: item.name,
                 price: item.price,
-                quantity:
-                  item.qty,
+                quantity: item.qty,
               })
             ),
 
             subtotal,
             deliveryFee,
             total,
-            zone,
+
+            zone: {
+              branch,
+              region,
+              area,
+            },
 
             paymentStatus: "Paid",
 
-            tx_ref:
-              response.tx_ref,
+            tx_ref: response.tx_ref,
 
             transactionId:
               response.transaction_id,
@@ -125,14 +129,11 @@ export default function FlutterwavePaymentButton({
 
           dispatch(clearCart());
 
-          navigate(
-            "/success",
-            {
-              state: {
-                order: result,
-              },
-            }
-          );
+          navigate("/success", {
+            state: {
+              order: result,
+            },
+          });
         } catch (error) {
           console.error(error);
 
