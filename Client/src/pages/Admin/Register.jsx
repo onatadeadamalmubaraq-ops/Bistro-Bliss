@@ -6,37 +6,27 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 export default function Register() {
   const navigate = useNavigate();
 
-  const [showPassword, setShowPassword] =
-    useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showAdminCode, setShowAdminCode] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [setupComplete, setSetupComplete] = useState(false);
 
-  const [showAdminCode, setShowAdminCode] =
-    useState(false);
-
-  const [loading, setLoading] =
-    useState(true);
-
-  const [setupComplete, setSetupComplete] =
-    useState(false);
-
-  const [formData, setFormData] =
-    useState({
-      fullName: "",
-      email: "",
-      password: "",
-      role: "",
-      adminCode: "",
-    });
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    password: "",
+    role: "",
+    adminCode: "",
+  });
 
   useEffect(() => {
     const checkSetup = async () => {
       try {
         const res = await axios.get(
-  `${import.meta.env.VITE_API_URL}/api/auth/setup-status`
-);
-
-        setSetupComplete(
-          res.data.setupComplete
+          `${import.meta.env.VITE_API_URL}/api/auth/setup-status`
         );
+
+        setSetupComplete(res.data.setupComplete);
       } catch (err) {
         console.log(err);
       } finally {
@@ -50,8 +40,7 @@ export default function Register() {
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
-      [e.target.name]:
-        e.target.value,
+      [e.target.name]: e.target.value,
     }));
   };
 
@@ -59,31 +48,32 @@ export default function Register() {
     e.preventDefault();
 
     try {
+      const token = localStorage.getItem("token");
+
       const res = await axios.post(
-  `${import.meta.env.VITE_API_URL}/api/auth/register`,
-  formData
-);
-
-      localStorage.setItem(
-        "token",
-        res.data.token
+        `${import.meta.env.VITE_API_URL}/api/auth/register`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
-      localStorage.setItem(
-        "user",
-        JSON.stringify(
-          res.data.user
-        )
-      );
+      alert("Staff registered successfully!");
 
-      navigate(
-        "/admin/dashboard"
-      );
+      setFormData({
+        fullName: "",
+        email: "",
+        password: "",
+        role: "",
+        adminCode: "",
+      });
+
+      navigate("/admin/dashboard");
     } catch (err) {
       alert(
-        err.response?.data
-          ?.message ||
-          "Registration failed"
+        err.response?.data?.message || "Registration failed"
       );
     }
   };
@@ -92,14 +82,6 @@ export default function Register() {
     return (
       <div className="min-h-screen flex justify-center items-center">
         Loading...
-      </div>
-    );
-  }
-
-  if (setupComplete) {
-    return (
-      <div className="min-h-screen flex justify-center items-center">
-        Setup already completed.
       </div>
     );
   }
@@ -118,93 +100,56 @@ export default function Register() {
           type="text"
           name="fullName"
           placeholder="Full Name"
-          value={
-            formData.fullName
-          }
-          onChange={
-            handleChange
-          }
+          value={formData.fullName}
+          onChange={handleChange}
           className="w-full border p-3 mb-4"
+          required
         />
 
         <input
           type="email"
           name="email"
           placeholder="Email"
-          value={
-            formData.email
-          }
-          onChange={
-            handleChange
-          }
+          value={formData.email}
+          onChange={handleChange}
           className="w-full border p-3 mb-4"
+          required
         />
 
         <div className="relative mb-4">
           <input
-            type={
-              showPassword
-                ? "text"
-                : "password"
-            }
+            type={showPassword ? "text" : "password"}
             name="password"
             placeholder="Password"
-            value={
-              formData.password
-            }
-            onChange={
-              handleChange
-            }
+            value={formData.password}
+            onChange={handleChange}
             className="w-full border p-3 pr-12"
+            required
           />
 
           <button
             type="button"
-            onClick={() =>
-              setShowPassword(
-                !showPassword
-              )
-            }
+            onClick={() => setShowPassword(!showPassword)}
             className="absolute right-4 top-1/2 -translate-y-1/2"
           >
-            {showPassword ? (
-              <FaEyeSlash />
-            ) : (
-              <FaEye />
-            )}
+            {showPassword ? <FaEyeSlash /> : <FaEye />}
           </button>
         </div>
 
         <select
           name="role"
-          value={
-            formData.role
-          }
-          onChange={
-            handleChange
-          }
+          value={formData.role}
+          onChange={handleChange}
           className="w-full border p-3 mb-4"
+          required
         >
-          <option value="">
-            Select Role
-          </option>
-
-          <option value="Admin">
-            Admin
-          </option>
-
-          <option value="Kitchen">
-            Kitchen
-          </option>
-
-          <option value="Rider">
-            Rider
-          </option>
-
+          <option value="">Select Role</option>
+          <option value="Admin">Admin</option>
+          <option value="Kitchen">Kitchen</option>
+          <option value="Rider">Rider</option>
           <option value="Operational Manager">
             Operational Manager
           </option>
-
           <option value="Sales Manager">
             Sales Manager
           </option>
@@ -212,36 +157,21 @@ export default function Register() {
 
         <div className="relative mb-6">
           <input
-            type={
-              showAdminCode
-                ? "text"
-                : "password"
-            }
+            type={showAdminCode ? "text" : "password"}
             name="adminCode"
             placeholder="Admin Access Code"
-            value={
-              formData.adminCode
-            }
-            onChange={
-              handleChange
-            }
+            value={formData.adminCode}
+            onChange={handleChange}
             className="w-full border p-3 pr-12"
+            required
           />
 
           <button
             type="button"
-            onClick={() =>
-              setShowAdminCode(
-                !showAdminCode
-              )
-            }
+            onClick={() => setShowAdminCode(!showAdminCode)}
             className="absolute right-4 top-1/2 -translate-y-1/2"
           >
-            {showAdminCode ? (
-              <FaEyeSlash />
-            ) : (
-              <FaEye />
-            )}
+            {showAdminCode ? <FaEyeSlash /> : <FaEye />}
           </button>
         </div>
 
@@ -249,7 +179,7 @@ export default function Register() {
           type="submit"
           className="w-full bg-black text-white p-3 rounded-lg"
         >
-          Register
+          Register Staff
         </button>
       </form>
     </div>
