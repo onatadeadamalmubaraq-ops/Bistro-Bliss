@@ -92,9 +92,15 @@ export default function Register() {
         onSubmit={handleSubmit}
         className="bg-white p-8 rounded-xl w-full max-w-md"
       >
-        <h1 className="text-3xl font-bold mb-6">
+        <h1 className="text-3xl font-bold mb-2">
           Staff Registration
         </h1>
+
+        {setupComplete && (
+          <p className="text-green-600 text-sm mb-6">
+            Admin setup completed. Register a new staff member below.
+          </p>
+        )}
 
         <input
           type="text"
@@ -159,7 +165,7 @@ export default function Register() {
           <input
             type={showAdminCode ? "text" : "password"}
             name="adminCode"
-            placeholder="Admin Access Code"
+            placeholder="Admin Secret Code"
             value={formData.adminCode}
             onChange={handleChange}
             className="w-full border p-3 pr-12"
