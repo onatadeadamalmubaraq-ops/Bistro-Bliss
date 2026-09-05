@@ -13,7 +13,7 @@ import {
   FaBell,
   FaTimes,
   FaSearch,
-  FaUserPlus, 
+  FaUserPlus,
 } from "react-icons/fa";
 
 export default function AdminLayout() {
@@ -31,18 +31,14 @@ export default function AdminLayout() {
       {/* SIDEBAR */}
       <aside
         className={`
-          fixed lg:relative
-          inset-y-0 left-0
-          z-50
-          w-72
-          bg-slate-900
-          text-white
-          transform
-          transition-transform
-          duration-300
+          fixed top-0 left-0 h-screen w-72
+          bg-slate-900 text-white z-50
+          transform transition-transform duration-300
+          flex flex-col
           ${open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
         `}
       >
+        {/* Logo */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-slate-800">
           <h1 className="text-2xl font-bold text-orange-500">
             Bistro Bliss
@@ -56,7 +52,8 @@ export default function AdminLayout() {
           </button>
         </div>
 
-        <nav className="p-4 space-y-2">
+        {/* Navigation */}
+        <nav className="flex-1 overflow-y-auto p-4 space-y-2">
           <NavLink
             to="/admin/dashboard"
             className={linkStyle}
@@ -75,7 +72,6 @@ export default function AdminLayout() {
             Products
           </NavLink>
 
-          {/* ✅ REGISTER STAFF ADDED */}
           <NavLink
             to="/admin/register"
             className={linkStyle}
@@ -131,7 +127,8 @@ export default function AdminLayout() {
           </NavLink>
         </nav>
 
-        <div className="absolute bottom-5 left-4 right-4">
+        {/* Logout */}
+        <div className="p-4 border-t border-slate-800">
           <button className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-red-500 hover:bg-red-600 transition">
             <FaSignOutAlt />
             Logout
@@ -147,50 +144,46 @@ export default function AdminLayout() {
         />
       )}
 
-      {/* MAIN */}
-      <div className="flex-1 flex flex-col min-w-0">
-       {/* TOPBAR */}
-     <header className="bg-white border-b h-20 px-4 md:px-8 flex items-center justify-between">
-    <div className="flex items-center gap-4">
-    <button
-      className="lg:hidden"
-      onClick={() => setOpen(true)}
-    >
-      <FaBars size={22} />
-    </button>
+      {/* MAIN CONTENT */}
+      <div className="flex-1 flex flex-col lg:ml-72 min-h-screen">
+        {/* TOPBAR */}
+        <header className="bg-white border-b h-20 px-4 md:px-8 flex items-center justify-between sticky top-0 z-30">
+          <div className="flex items-center gap-4">
+            <button
+              className="lg:hidden"
+              onClick={() => setOpen(true)}
+            >
+              <FaBars size={22} />
+            </button>
 
-    <div className="hidden md:flex items-center bg-slate-100 rounded-xl px-4 py-2 w-80">
-      <FaSearch className="text-slate-500" />
+            <div className="hidden md:flex items-center bg-slate-100 rounded-xl px-4 py-2 w-80">
+              <FaSearch className="text-slate-500" />
 
-      <input
-        type="text"
-        placeholder="Search..."
-        className="bg-transparent outline-none ml-3 w-full"
-      />
-    </div>
-  </div>
+              <input
+                type="text"
+                placeholder="Search..."
+                className="bg-transparent outline-none ml-3 w-full"
+              />
+            </div>
+          </div>
 
-  <div className="flex items-center gap-6">
-    {/* Notification Bell */}
-    <button>
-      <FaBell size={20} />
-    </button>
+          <div className="flex items-center gap-6">
+            <button>
+              <FaBell size={20} />
+            </button>
 
-    {/* Admin Info */}
-    <div className="flex items-center gap-3">
-      <div className="hidden md:block">
-        <p className="font-semibold">Admin</p>
+            <div className="hidden md:block">
+              <p className="font-semibold">Admin</p>
 
-        <p className="text-xs text-slate-500">
-          Bistro Bliss
-        </p>
-      </div>
-    </div>
-  </div>
-</header>
+              <p className="text-xs text-slate-500">
+                Bistro Bliss
+              </p>
+            </div>
+          </div>
+        </header>
 
         {/* PAGE CONTENT */}
-        <main className="flex-1 p-4 md:p-6 lg:p-8 overflow-auto">
+        <main className="flex-1 p-4 md:p-6 lg:p-8 overflow-y-auto">
           <Outlet />
         </main>
       </div>
