@@ -11,15 +11,59 @@ export default function RiderDashboard() {
     socket.emit("joinRider");
 
     const handleUpdate = (order) => {
-      setOrders((prev) =>
-        prev.map((o) => (o._id === order._id ? order : o))
-      );
+      setOrders((prev) => {
+        const exists = prev.find(
+          (o) => o._id === order._id
+        );
+
+        if (
+          ["Ready", "Picked Up", "In Transit"].includes(
+            order.orderStatus
+          )
+        ) {
+          if (exists) {
+            return prev.map((o) =>
+              o._id === order._id
+                ? order
+                : o
+            );
+          }
+
+          return [order, ...prev];
+        }
+
+        return prev.filter(
+          (o) => o._id !== order._id
+        );
+      });
     };
 
-    socket.on("orderUpdated", handleUpdate);
+    const handleNotification = (data) => {
+      if (data.type === "order-ready") {
+        alert(`🚚 ${data.message}`);
+      }
+    };
+
+    socket.on(
+      "orderUpdated",
+      handleUpdate
+    );
+
+    socket.on(
+      "notification",
+      handleNotification
+    );
 
     return () => {
-      socket.off("orderUpdated", handleUpdate);
+      socket.off(
+        "orderUpdated",
+        handleUpdate
+      );
+
+      socket.off(
+        "notification",
+        handleNotification
+      );
     };
   }, []);
 
@@ -27,11 +71,14 @@ export default function RiderDashboard() {
     try {
       const res = await api.get("/orders");
 
-      // ✅ FILTER ONLY RIDER-RELEVANT ORDERS
-      const filtered = res.data.filter((order) =>
-        ["Ready", "Picked Up", "In Transit"].includes(
-          order.orderStatus
-        )
+      // FILTER ONLY RIDER-RELEVANT ORDERS
+      const filtered = res.data.filter(
+        (order) =>
+          [
+            "Ready",
+            "Picked Up",
+            "In Transit",
+          ].includes(order.orderStatus)
       );
 
       setOrders(filtered);
@@ -40,9 +87,15 @@ export default function RiderDashboard() {
     }
   };
 
-  const updateStatus = async (id, status) => {
+  const updateStatus = async (
+    id,
+    status
+  ) => {
     try {
-      await api.put(`/orders/${id}`, { status });
+      await api.put(
+        `/orders/${id}`,
+        { status }
+      );
     } catch (err) {
       console.log(err);
     }
@@ -66,15 +119,24 @@ export default function RiderDashboard() {
               {order.customer?.name}
             </p>
 
-            <p>Address: {order.customer?.address}</p>
+            <p>
+              Address:{" "}
+              {order.customer?.address}
+            </p>
 
-            <p>Status: {order.orderStatus}</p>
+            <p>
+              Status:{" "}
+              {order.orderStatus}
+            </p>
 
             <div className="flex gap-2 mt-3">
 
               <button
                 onClick={() =>
-                  updateStatus(order._id, "Picked Up")
+                  updateStatus(
+                    order._id,
+                    "Picked Up"
+                  )
                 }
                 className="px-3 py-1 bg-blue-500 text-white rounded"
               >
@@ -83,7 +145,10 @@ export default function RiderDashboard() {
 
               <button
                 onClick={() =>
-                  updateStatus(order._id, "In Transit")
+                  updateStatus(
+                    order._id,
+                    "In Transit"
+                  )
                 }
                 className="px-3 py-1 bg-purple-600 text-white rounded"
               >
@@ -92,7 +157,10 @@ export default function RiderDashboard() {
 
               <button
                 onClick={() =>
-                  updateStatus(order._id, "Delivered")
+                  updateStatus(
+                    order._id,
+                    "Delivered"
+                  )
                 }
                 className="px-3 py-1 bg-green-600 text-white rounded"
               >
@@ -105,7 +173,6 @@ export default function RiderDashboard() {
         ))}
 
       </div>
-
     </div>
   );
 }

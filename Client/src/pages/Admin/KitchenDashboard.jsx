@@ -12,27 +12,52 @@ export default function KitchenDashboard() {
 
     socket.on("newOrder", (order) => {
       setOrders((prev) => [order, ...prev]);
+
+      alert(
+        `🍽️ New Order Received!\n\nCustomer: ${
+          order.customer?.name || "Customer"
+        }`
+      );
     });
 
     socket.on("orderUpdated", (updated) => {
       setOrders((prev) =>
-        prev.map((o) => (o._id === updated._id ? updated : o))
+        prev.map((o) =>
+          o._id === updated._id ? updated : o
+        )
       );
+    });
+
+    socket.on("notification", (data) => {
+      if (data.type === "new-order") {
+        alert(`🍽️ ${data.message}`);
+      }
     });
 
     return () => {
       socket.off("newOrder");
       socket.off("orderUpdated");
+      socket.off("notification");
     };
   }, []);
 
   const fetchOrders = async () => {
-    const res = await api.get("/orders");
-    setOrders(res.data);
+    try {
+      const res = await api.get("/orders");
+      setOrders(res.data);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const updateStatus = async (id, status) => {
-    await api.put(`/orders/${id}`, { status });
+    try {
+      await api.put(`/orders/${id}`, {
+        status,
+      });
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -56,18 +81,23 @@ export default function KitchenDashboard() {
             <p className="mt-2">
               {order.items?.map((i, idx) => (
                 <span key={idx}>
-                  {i.name} x{i.qty} <br />
+                  {i.name} x{i.quantity} <br />
                 </span>
               ))}
             </p>
 
-            <p>Status: {order.orderStatus}</p>
+            <p>
+              Status: {order.orderStatus}
+            </p>
 
             <div className="flex gap-2 mt-3">
 
               <button
                 onClick={() =>
-                  updateStatus(order._id, "Preparing")
+                  updateStatus(
+                    order._id,
+                    "Preparing"
+                  )
                 }
                 className="px-3 py-1 bg-yellow-500 text-white rounded"
               >
@@ -76,7 +106,10 @@ export default function KitchenDashboard() {
 
               <button
                 onClick={() =>
-                  updateStatus(order._id, "Ready")
+                  updateStatus(
+                    order._id,
+                    "Ready"
+                  )
                 }
                 className="px-3 py-1 bg-green-600 text-white rounded"
               >
